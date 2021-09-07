@@ -4,6 +4,8 @@ const express = require('express');
 const router = express.Router();
 // RECUPERATION MYSQL
 const mysql = require('mysql');
+//import bcrypt
+const bcrypt = require ('bcrypt');
 //connection post DATABASE
 const db = mysql.createPool({
   host: 'localhost',
@@ -15,32 +17,28 @@ const db = mysql.createPool({
 //Utilisation router
 //POST SINGUP
 router.post('/signup', (req,res) =>{
+    /*recuperation  saisie*/
     const email = req.body.email
     const password = req.body.password
-   //inserer dan la database
+    
+   //inserer dans la database
    db.query(
+       //inserer les data
        "INSERT INTO  user (email, password) VALUES (?,?)",
         [email, password], 
         (err,result)=> {
-            console.log(err);
+            //si email existe pas (pas d'erreur)
+            if (!err){
+                res.status(201).json({ message: 'Utilisateur créé!' })
+            }
+            else{
+                res.status(400).json({ errr:err })
+            }
+           // res.send({err: err}); 
+
         }
 
    );
-    res.json({ message: 'Votre requête a bien été reçue pour singup!' });
-});
-//POST LOGIN
-router.post('/login', (req,res) =>{    const email = req.body.email
-    const password = req.body.password
-   //inserer dan la database
-   db.query(
-       "INSERT INTO  user (email, password) VALUES (?,?)",
-        [email, password], 
-        (err,result)=> {
-            console.log(err);
-        }
-
-   );
-    res.json({ message:email + 'Votre requête a bien été reçue pour login!' }); 
 });
 
 //export du router
