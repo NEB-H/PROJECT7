@@ -4,8 +4,9 @@ const express = require('express');
 const router = express.Router();
 // RECUPERATION MYSQL
 const mysql = require('mysql');
-//import bcrypt
-const bcrypt = require ('bcrypt');
+//import de bcrypt
+const bcrypt = require('bcrypt') ;
+const saltRounds = 10;
 //connection post DATABASE
 const db = mysql.createPool({
   host: 'localhost',
@@ -21,25 +22,71 @@ router.post('/signup', (req,res) =>{
     const email = req.body.email
     const password = req.body.password
     
-   //inserer dans la database
-   db.query(
-       //inserer les data
-       "INSERT INTO  user (email, password) VALUES (?,?)",
-        [email, password], 
-        (err,result)=> {
-            //si email existe pas (pas d'erreur)
-            if (!err){
-                res.status(201).json({ message: 'Utilisateur créé!' })
-            }
-            else{
-                res.status(400).json({ errr:err })
-            }
-           // res.send({err: err}); 
-
+    console.log(password)
+    bcrypt.hash (password,saltRounds,(err,hash) =>{
+       
+        
+        if (err) {
+            console.log(err)
         }
+        //inserer dans la database
+      
+        db.query(
+         //inserer les data
+         "INSERT INTO  user (email, password) VALUES (?,?)",
+          [email, hash], 
+          (result)=> {
+              //si email existe pas 
+              if (!result){
+                  res.status(201).json({ message: 'Utilisateur créé!' })
+              }
+              else{
+                  res.status(400).json({ message:'user already exist' })
+              }
+             // res.send({err: err}); 
+          
+          }
+        );
 
-   );
+    })
 });
 
+// LOGIN
+router.post('/login', (req,res) =>{   
+    /*recuperation des saisi*/    
+    const email = req.body.email
+    const password = req.body.password
+
+    db.query(
+    //verification email
+    "SELECT * FROM  user WHERE email = ? ",
+     [email], 
+     (err,result)=> {
+         //SI une erreur
+         if (err){
+             res.send({err:err}); 
+         } 
+         console.log(result[0].password)
+         //Si on trouve le mail 
+         if (result){
+             
+             bcrypt.compare(password, result[0].password,(error, response) => {
+                // si compare true
+                 if(response) {
+                     res.status(201).json({message: "Mot de passe correct"}); 
+                 } else {
+                    res.status(401).json({message: "Mot de passe incorrect"}); 
+                 }
+             })
+             //si compare false      
+             } else  {
+                res.send({message:"Cette utilisateur n'existe pas"})
+
+             }
+         }
+   
+    );
+ 
+});
 //export du router
 module.exports = router;

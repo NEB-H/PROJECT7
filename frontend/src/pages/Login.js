@@ -15,7 +15,7 @@ const Login = () => {
                 email:email,
                 password:password
             } )
-            .then(response => console.log(response));
+            .then(response => (response));
     };
    
 

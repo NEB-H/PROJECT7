@@ -8,12 +8,15 @@ const Singup = () => {
     //hooks useState
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    
     //fonction post
     function post() {axios.post('http://localhost:4250/api/auth/signup',{
+       
                 //recuperation des element du formulaire
                 email:email,
                 password:password
             } )
+            
             .then(response => (response));
     };
        

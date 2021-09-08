@@ -2,6 +2,7 @@
 const http = require ('http');
 //Recuperatio app 
 const app = require('./app');
+//cors
 
 //Indication du port a utiliser uniquement 300
 app.set('port', process.env.PORT || 4250); 
