@@ -61,24 +61,27 @@ router.post('/login', (req,res) =>{
     //verification email
     "SELECT * FROM  user WHERE email = ? ",
      [email], 
-     (err,result)=> {
+     (err,user)=> {
          //SI une erreur
          if (err){
              res.send({err:err}); 
          } 
-         console.log(result[0].password)
+         console.log(user[0].password)
+         console.log(password)
          //Si on trouve le mail 
-         if (result){
-             
-             bcrypt.compare(password, result[0].password,(error, response) => {
+         if (user){             
+             bcrypt.compare(password, user[0].password)
+             .then(valid => {
+                console.log(valid)
                 // si compare true
-                 if(response) {
+                 if(valid) {
                      res.status(201).json({message: "Mot de passe correct"}); 
+                  //si compare false     
                  } else {
                     res.status(401).json({message: "Mot de passe incorrect"}); 
                  }
              })
-             //si compare false      
+                 
              } else  {
                 res.send({message:"Cette utilisateur n'existe pas"})
 
