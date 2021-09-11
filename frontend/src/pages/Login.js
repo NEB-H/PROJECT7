@@ -3,7 +3,6 @@ import Navigation from "../components/Navigation";
 import axios from "axios";
 
 
-
 const Login = () => {
     
     //hooks useState
@@ -15,14 +14,24 @@ const Login = () => {
                 email:email,
                 password:password
             } )
-            .then(response => (response));
+            .then(response => {
+                //test
+                if (response.status ===201 ){
+                    alert("AUTHENTHIFICATION OK")
+                                    
+                }else{
+                    alert("Mot de passe incorrect")
+                }
+            });
+ 
+           
     };
    
 
     return (
         <div className = "login">
             <header>
-                <h1>LOGIN</h1>
+                <h1>Connectez-vous !</h1>
                 <Navigation/>
             </header>
 
@@ -42,7 +51,7 @@ const Login = () => {
                 </input>
                 <br></br>
                 {/*Button avec lancement fonction post*/}
-                <button onClick={post}> Login</button>
+                <button onClick={post}> <a href="/Singup">Login</a></button>
             
             </div>                      
             </main>

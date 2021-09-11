@@ -23,7 +23,7 @@ const Singup = () => {
         return (
         <div className="singup">
             <header>
-                <h2>Sing</h2>
+                <h2>Creez votre compte !</h2>
                 <Navigation/>
             </header>
 
@@ -43,7 +43,7 @@ const Singup = () => {
                 </input>
                 <br></br>
                 {/*Button avec lancement fonction post*/}
-                <button onClick={post}> Singup</button>
+                <button onClick={post }> Singup </button>
 
             </div> 
                             
